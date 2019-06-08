@@ -37,11 +37,11 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			//add_action( 'cocart_item_removed', array( $this, 'limited_edition' ) );
 
 			// This filter can be used to return additional product data i.e. sku, weight etc.
-			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 3, 10 );
-			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 3, 15 );
+			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
+			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 15, 4 );
 
 			// Can be used to apply a condition for a specific item should it not be allowed for a customer to add on it's own.
-			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 3, 10 );
+			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 10, 3 );
 
 			// Load translation files.
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );

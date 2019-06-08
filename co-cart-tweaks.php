@@ -36,6 +36,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// Could be used to send a logged in customer an email that the item removed is a limited item.
 			//add_action( 'cocart_item_removed', array( $this, 'limited_edition' ) );
 
+			// Returns the cart contents without the cart item key as the parent array.
+			add_filter( 'cocart_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0, 4 );
+
 			// This filter can be used to return additional product data i.e. sku, weight etc.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 15, 4 );
@@ -102,6 +105,26 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 				wp_email( $send_to, $subject, $message, $headers );
 			}
+		}
+
+		/**
+		 * Returns the cart contents without the cart item key as the parent array.
+		 *
+		 * @access public
+		 * @param  array  $cart_contents
+		 * @param  int    $item_key
+		 * @param  array  $cart_item
+		 * @param  object $_product
+		 * @return array  $cart_contents
+		 */
+		public function remove_parent_cart_item_key( $cart_contents, $item_key, $cart_item, $_product ) {
+			$new_cart_contents = array();
+
+			foreach ( $cart_contents as $item_key => $cart_item ) {
+				$new_cart_contents[] = $cart_item;
+			}
+
+			return $new_cart_contents;
 		}
 
 		/**

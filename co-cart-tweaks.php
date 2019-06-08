@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.1
+ * Version:     0.0.2
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -135,6 +135,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * @param  int    $item_key
 		 * @param  array  $cart_item
 		 * @param  object $_product
+		 * @return array  $cart_contents
 		 */
 		public function return_product_sku( $cart_contents, $item_key, $cart_item, $_product ) {
 			$cart_contents[$item_key]['sku'] = $_product->get_sku();
@@ -197,7 +198,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 */
 		public function load_plugin_textdomain() {
 			load_plugin_textdomain( 'co-cart-tweaks', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-		} // END load_plugin_textdomain()
+		}
 
 	} // END class
 

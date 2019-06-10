@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.3
+ * Version:     0.0.4
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -37,7 +37,8 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			//add_action( 'cocart_item_removed', array( $this, 'limited_edition' ) );
 
 			// Returns the cart contents without the cart item key as the parent array.
-			//add_filter( 'cocart_return_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0, 4 );
+			//add_filter( 'cocart_return_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0 );
+			//add_filter( 'cocart_return_removed_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0 );
 
 			// This filter can be used to return additional product data i.e. sku, weight etc for all items or a specific item.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );

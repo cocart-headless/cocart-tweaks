@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.2
+ * Version:     0.0.3
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -37,9 +37,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			//add_action( 'cocart_item_removed', array( $this, 'limited_edition' ) );
 
 			// Returns the cart contents without the cart item key as the parent array.
-			//add_filter( 'cocart_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0, 4 );
+			//add_filter( 'cocart_return_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0, 4 );
 
-			// This filter can be used to return additional product data i.e. sku, weight etc.
+			// This filter can be used to return additional product data i.e. sku, weight etc for all items or a specific item.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 15, 4 );
 
@@ -111,13 +111,10 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * Returns the cart contents without the cart item key as the parent array.
 		 *
 		 * @access public
-		 * @param  array  $cart_contents
-		 * @param  int    $item_key
-		 * @param  array  $cart_item
-		 * @param  object $_product
-		 * @return array  $cart_contents
+		 * @param  array $cart_contents
+		 * @return array $cart_contents
 		 */
-		public function remove_parent_cart_item_key( $cart_contents, $item_key, $cart_item, $_product ) {
+		public function remove_parent_cart_item_key( $cart_contents ) {
 			$new_cart_contents = array();
 
 			foreach ( $cart_contents as $item_key => $cart_item ) {

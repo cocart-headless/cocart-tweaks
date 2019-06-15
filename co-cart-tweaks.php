@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.4
+ * Version:     0.0.5
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -39,6 +39,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// Returns the cart contents without the cart item key as the parent array.
 			//add_filter( 'cocart_return_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0 );
 			//add_filter( 'cocart_return_removed_cart_contents', array( $this, 'remove_parent_cart_item_key' ), 0 );
+
+			// Enhances the cart return.
+			//add_filter( 'cocart_return_cart_contents', array( $this, 'enhance_cart_return' ), 99 );
 
 			// This filter can be used to return additional product data i.e. sku, weight etc for all items or a specific item.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
@@ -122,6 +125,28 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 				$new_cart_contents[] = $cart_item;
 			}
 
+			return $new_cart_contents;
+		}
+
+		/**
+		 * Enhances the cart return.
+		 *
+		 * 1. Places the cart content under a new array.
+		 * 2. Returns the shipping status of the cart.
+		 *
+		 * @access public
+		 * @param  array $cart_contents
+		 * @return array $cart_contents
+		 */
+		public function enhance_cart_return( $cart_contents ) {
+			$new_cart_contents = array();
+
+			// Places the cart contents under a new array.
+			$new_cart_contents['items'] = $cart_contents;
+
+			// Returns the shipping status of the cart.
+			$new_cart_contents['needs_shipping'] = WC()->cart->needs_shipping();
+	
 			return $new_cart_contents;
 		}
 

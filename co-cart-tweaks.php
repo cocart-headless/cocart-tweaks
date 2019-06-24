@@ -131,21 +131,32 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		/**
 		 * Enhances the cart return.
 		 *
-		 * 1. Places the cart content under a new array.
-		 * 2. Returns the shipping status of the cart.
+		 * 1. Return the cart hash.
+		 * 2. Places the cart content under a new array.
+		 * 3. Returns the shipping status of the cart.
+		 * 4. Returns the payment status of the cart.
 		 *
 		 * @access public
 		 * @param  array $cart_contents
-		 * @return array $cart_contents
+		 * @return array $new_cart_contents
 		 */
 		public function enhance_cart_return( $cart_contents ) {
 			$new_cart_contents = array();
+
+			// Get Cart.
+			$cart = WC()->cart;
+
+			// Cart hash.
+			$new_cart_contents['cart_hash'] = $cart->get_cart_hash();
 
 			// Places the cart contents under a new array.
 			$new_cart_contents['items'] = $cart_contents;
 
 			// Returns the shipping status of the cart.
-			$new_cart_contents['needs_shipping'] = WC()->cart->needs_shipping();
+			$new_cart_contents['needs_shipping'] = $cart->needs_shipping();
+
+			// Returns the payment status of the cart.
+			$new_cart_contents['needs_payment'] = $cart->needs_payment();
 	
 			return $new_cart_contents;
 		}

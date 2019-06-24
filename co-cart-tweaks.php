@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.5
+ * Version:     0.0.6
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -70,6 +70,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * @access public
 		 */
 		public function send_customer_email_empty() {
+			// TODO: `is_user_logged_in()` will return false via the REST API so you will have to authenticate the user another way.
 			if ( is_user_logged_in() ) {
 				$user_id  = get_current_user_id();
 				$userdata = get_userdata( $user_id );
@@ -92,6 +93,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * @access public
 		 */
 		public function limited_item( $current_data ) {
+			// TODO: `is_user_logged_in()` will return false via the REST API so you will have to authenticate the user another way.
 			if ( is_user_logged_in() ) {
 				$user_id  = get_current_user_id();
 				$userdata = get_userdata( $user_id );

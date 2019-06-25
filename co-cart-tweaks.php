@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.6
+ * Version:     0.0.7
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -46,6 +46,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// This filter can be used to return additional product data i.e. sku, weight etc for all items or a specific item.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 15, 4 );
+
+			// This filter can also be used to return the line total and subtotal for each item in cart with 2 decimals.
+			//add_filter( 'cocart_cart_contents', array( $this, 'return_price_decimals' ), 15, 4 );
 
 			// Can be used to apply a condition for a specific item should it not be allowed for a customer to add on it's own.
 			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 10, 3 );
@@ -190,6 +193,27 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 */
 		public function return_product_weight( $cart_contents, $item_key, $cart_item, $_product ) {
 			$cart_contents[$item_key]['weight'] = $_product->get_weight();
+
+			return $cart_contents;
+		}
+
+		/**
+		 * Returns the line total and subtotal with two decimals for each item in the cart.
+		 *
+		 * 1. Line subtotal example shows how to apply the decimals without the price format.
+		 * 2. Line total example shows how to apply the decimals with price format, stripped of HTML and character decoded.
+		 *
+		 * @access public
+		 * @param  array  $cart_contents
+		 * @param  int    $item_key
+		 * @param  array  $cart_item
+		 * @param  object $_product
+		 */
+		public function return_price_decimals( $cart_contents, $item_key, $cart_item, $_product ) {
+			$decimals = 2; // TODO: Change the number of decimals to your requirement.
+
+			$cart_contents[$item_key]['line_subtotal'] = number_format( $cart_contents[$item_key]['line_subtotal'], $decimals, wc_get_price_decimal_separator(), wc_get_price_thousand_separator() );
+			$cart_contents[$item_key]['line_total']    = html_entity_decode( strip_tags( wc_price( $cart_contents[$item_key]['line_total'], $decimals ) ) );
 
 			return $cart_contents;
 		}

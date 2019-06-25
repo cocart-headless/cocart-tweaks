@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.7
+ * Version:     0.0.8
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -49,6 +49,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			// This filter can also be used to return the line total and subtotal for each item in cart with 2 decimals.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_price_decimals' ), 15, 4 );
+
+			// This filter can also be used to return the stock status, stock quantity and a color based on the stock status.
+			//add_filter( 'cocart_cart_contents', array( $this, 'return_stock_status' ), 15, 4 );
 
 			// Can be used to apply a condition for a specific item should it not be allowed for a customer to add on it's own.
 			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 10, 3 );
@@ -214,6 +217,43 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			$cart_contents[$item_key]['line_subtotal'] = number_format( $cart_contents[$item_key]['line_subtotal'], $decimals, wc_get_price_decimal_separator(), wc_get_price_thousand_separator() );
 			$cart_contents[$item_key]['line_total']    = html_entity_decode( strip_tags( wc_price( $cart_contents[$item_key]['line_total'], $decimals ) ) );
+
+			return $cart_contents;
+		}
+
+		/**
+		 * Return the stock status, stock quantity and a color based 
+		 * on the stock status of each item in cart.
+		 *
+		 * @access public
+		 * @param  array  $cart_contents
+		 * @param  int    $item_key
+		 * @param  array  $cart_item
+		 * @param  object $_product
+		 */
+		public function return_stock_status( $cart_contents, $item_key, $cart_item, $_product ) {
+			$status = $_product->get_stock_status();
+			$color  = '#a46497';
+
+			switch( $status ) {
+				case 'instock':
+					$status = __( 'In Stock', 'co-cart-tweaks' );
+					$color  = '#7ad03a';
+					break;
+				case 'outofstock':
+					$status = __( 'Out of Stock', 'co-cart-tweaks' );
+					$color  = '#a00';
+					break;
+				case 'onbackorder':
+					$status = __( 'Available on backorder', 'co-cart-tweaks' );
+					break;
+			}
+
+			$cart_contents[$item_key]['stock'] = array(
+				'status'         => $status,
+				'stock_quantity' => $_product->get_stock_quantity(),
+				'hex_color'      => $color
+			);
 
 			return $cart_contents;
 		}

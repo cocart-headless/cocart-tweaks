@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.8
+ * Version:     0.0.9
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -55,6 +55,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			// Can be used to apply a condition for a specific item should it not be allowed for a customer to add on it's own.
 			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 10, 3 );
+
+			// This filter could be used for example, to remove the free shipping method should the cart have X amount of items.
+			//add_filter( 'cocart_available_shipping_methods', array( $this, 'no_free_shipping' ), 99, 1 );
 
 			// Load translation files.
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -285,6 +288,25 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			}
 
 			return array( $status, $response );
+		}
+
+		/**
+		 * Remove the free shipping method should the cart have X amount of items.
+		 * 
+		 * Note: In this example I have asked it to check if the cart has 
+		 * 4 or more items before removing the free shipping method.
+		 *
+		 * @access public
+		 * @param  array  $available_methods
+		 * @return array  $available_methods
+		 */
+		public function no_free_shipping( $available_methods ) {
+			// TODO: Change the id ('free_shipping:3') according to the free shipping method set in your store.
+			if ( WC()->cart->get_cart_contents_count() >= 4 ) {
+				unset( $available_methods['free_shipping:3'] );
+			}
+
+			return $available_methods;
 		}
 
 		/**

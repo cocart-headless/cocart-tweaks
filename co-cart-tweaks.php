@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.9
+ * Version:     0.0.10
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -143,9 +143,10 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * Enhances the cart return.
 		 *
 		 * 1. Return the cart hash.
-		 * 2. Places the cart content under a new array.
-		 * 3. Returns the shipping status of the cart.
-		 * 4. Returns the payment status of the cart.
+		 * 2. Places the cart content under a new array called items.
+		 * 3. Returns the item count of all items.
+		 * 4. Returns the shipping status of the cart.
+		 * 5. Returns the payment status of the cart.
 		 *
 		 * @access public
 		 * @param  array $cart_contents
@@ -162,6 +163,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			// Places the cart contents under a new array.
 			$new_cart_contents['items'] = $cart_contents;
+
+			// Returns item count of all items.
+			$new_cart_contents['items_counted'] = $cart->get_cart_contents_count();
 
 			// Returns the shipping status of the cart.
 			$new_cart_contents['needs_shipping'] = $cart->needs_shipping();

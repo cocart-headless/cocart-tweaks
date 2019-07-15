@@ -5,12 +5,12 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.10
+ * Version:     0.0.11
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
  * WC requires at least: 3.0.0
- * WC Tweaksed up to: 3.6.4
+ * WC Tweaksed up to: 3.6.5
  *
  * Copyright: © 2019 Sébastien Dumont, (mailme@sebastiendumont.com)
  *
@@ -58,6 +58,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			// This filter could be used for example, to remove the free shipping method should the cart have X amount of items.
 			//add_filter( 'cocart_available_shipping_methods', array( $this, 'no_free_shipping' ), 99, 1 );
+
+			// Enable prerelease updates for CoCart Pro.
+			//add_filter( 'cocart_pro_allow_prereleases', function() { return true; });
 
 			// Load translation files.
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );

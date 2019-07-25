@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.11
+ * Version:     0.0.12
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -95,7 +95,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 					'From: Me Myself <me@example.net>'
 				);
 
-				wp_email( $send_to, $subject, $message, $headers );
+				wp_mail( $send_to, $subject, $message, $headers );
 			}
 		}
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 					'From: Me Myself <me@example.net>'
 				);
 
-				wp_email( $send_to, $subject, $message, $headers );
+				wp_mail( $send_to, $subject, $message, $headers );
 			}
 		}
 

@@ -56,6 +56,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// Can be used to apply a condition for a specific item should it not be allowed for a customer to add on it's own.
 			//add_filter( 'cocart_ok_to_add', array( $this, 'requires_specific_item' ), 10, 3 );
 
+			// Returns the shipping method contents without the shipping method item key as the parent array.
+			//add_filter( 'cocart_available_shipping_methods', array( $this, 'remove_parent_shipping_method_item_key'), 0 );
+			
 			// This filter could be used for example, to remove the free shipping method should the cart have X amount of items.
 			//add_filter( 'cocart_available_shipping_methods', array( $this, 'no_free_shipping' ), 99, 1 );
 
@@ -296,7 +299,22 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			return array( $status, $response );
 		}
-
+		
+		/**
+		 * Returns the shipping method contents without the shipping method item key as the parent array.
+		 *
+		 * @access public
+		 * @param  array $shipping_method_contents
+		 * @return array $shipping_method_contents
+		 */
+		public function remove_parent_shipping_method_item_key( $shipping_method_contents ) {
+			$new_shipping_method_contents = array();
+			foreach ( $shipping_method_contents as $item_key => $shipping_method_item ) {
+				$new_shipping_method_contents[] = $shipping_method_item;
+			}
+			return $new_shipping_method_contents;
+		}
+		
 		/**
 		 * Remove the free shipping method should the cart have X amount of items.
 		 * 

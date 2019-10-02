@@ -5,12 +5,12 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.12
+ * Version:     0.0.13
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
- * WC requires at least: 3.0.0
- * WC Tweaksed up to: 3.6.5
+ * WC requires at least: 3.6.0
+ * WC Tweaksed up to: 3.7.0
  *
  * Copyright: © 2019 Sébastien Dumont, (mailme@sebastiendumont.com)
  *
@@ -58,6 +58,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			// This filter could be used for example, to remove the free shipping method should the cart have X amount of items.
 			//add_filter( 'cocart_available_shipping_methods', array( $this, 'no_free_shipping' ), 99, 1 );
+
+			// This filter allows you to adjust the product data returned.
+			//add_filter( 'cocart_prepare_product_object', array( $this, 'add_extra_product_data' ), 10, 2 );
 
 			// Enable prerelease updates for CoCart Pro.
 			//add_filter( 'cocart_pro_allow_prereleases', function() { return true; });
@@ -315,6 +318,26 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 
 			return $available_methods;
 		}
+
+		/**
+		 * Add Extra Product Data.
+		 *
+		 * Note: This example shows the additional data added only for a specific product.
+		 *
+		 * @access public
+		 * @param  object $response
+		 * @param  object $object
+		 * @return object $response
+		 */
+		public function add_extra_product_data( $response, $object ) {
+			if ( $object->get_id() == '326' ) {
+				$response->data['my_product_data'] = array(
+					'limited_run_number' => '500',
+				);
+			}
+
+			return $response;
+		} // add_extra_product_data()
 
 		/**
 		 * Make the plugin translation ready.

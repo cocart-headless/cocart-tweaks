@@ -5,14 +5,14 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.13
+ * Version:     0.0.14
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
  * WC requires at least: 3.6.0
- * WC Tweaksed up to: 3.7.0
+ * WC Tested up to: 3.9.3
  *
- * Copyright: © 2019 Sébastien Dumont, (mailme@sebastiendumont.com)
+ * Copyright: © 2020 Sébastien Dumont, (mailme@sebastiendumont.com)
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -47,7 +47,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_sku' ), 10, 4 );
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_product_weight' ), 15, 4 );
 
-			// This filter can also be used to return the line total and subtotal for each item in cart with 2 decimals.
+			// This filter can also be used to return the line total and subtotal for each item in cart with X amount of decimals.
 			//add_filter( 'cocart_cart_contents', array( $this, 'return_price_decimals' ), 15, 4 );
 
 			// This filter can also be used to return the stock status, stock quantity and a color based on the stock status.
@@ -65,7 +65,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// This filter allows you to adjust the product data returned.
 			//add_filter( 'cocart_prepare_product_object', array( $this, 'add_extra_product_data' ), 10, 2 );
 
-			// This filer allows you to change the empty response when the cart is empty.
+			// This filer allows you to change the empty response when the cart is empty. - Requires v2.0.8
 			add_filter( 'cocart_return_empty_cart', array( $this, 'go_back_to_shop' ) );
 
 			// Enable prerelease updates for CoCart Pro.

@@ -65,6 +65,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			// This filter allows you to adjust the product data returned.
 			//add_filter( 'cocart_prepare_product_object', array( $this, 'add_extra_product_data' ), 10, 2 );
 
+			// This filer allows you to change the empty response when the cart is empty.
+			add_filter( 'cocart_return_empty_cart', array( $this, 'go_back_to_shop' ) );
+
 			// Enable prerelease updates for CoCart Pro.
 			//add_filter( 'cocart_pro_allow_prereleases', function() { return true; });
 
@@ -355,7 +358,18 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			}
 
 			return $response;
-		} // add_extra_product_data()
+		}
+
+		/**
+		 * Changes the empty response when the cart is empty.
+		 *
+		 * @access public
+		 * @return string
+		 */
+		public function go_back_to_shop() {
+			return __( 'Whoa there! I think you forgot to add items to the cart first. Go back to the shop and add something first', 'co-cart-tweaks' );
+		}
+
 
 		/**
 		 * Make the plugin translation ready.

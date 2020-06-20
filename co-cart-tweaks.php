@@ -5,7 +5,7 @@
  * Description: Example of using CoCart filters to extend the information sent and returned.
  * Author:      Sébastien Dumont
  * Author URI:  https://sebastiendumont.com
- * Version:     0.0.14
+ * Version:     0.0.15
  * Text Domain: co-cart-tweaks
  * Domain Path: /languages/
  *
@@ -66,10 +66,30 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			//add_filter( 'cocart_prepare_product_object', array( $this, 'add_extra_product_data' ), 10, 2 );
 
 			// This filer allows you to change the empty response when the cart is empty. - Requires v2.0.8
-			add_filter( 'cocart_return_empty_cart', array( $this, 'go_back_to_shop' ) );
+			//add_filter( 'cocart_return_empty_cart', array( $this, 'go_back_to_shop' ) );
 
 			// Enable prerelease updates for CoCart Pro.
 			//add_filter( 'cocart_pro_allow_prereleases', function() { return true; });
+
+
+			// Filters below this line require version 2.1 of CoCart in order to use them.
+
+			// Disable debug logging for specific events.
+			//add_filter( 'cocart_logging', array( $this, 'disable_logs' ), 0, 3 );
+
+			// This filter allows you to override the product name and title.
+			//add_filter( 'cocart_product_name', array( $this, 'override_product_name' ), 10, 3 );
+			//add_filter( 'cocart_product_title', array( $this, 'override_product_name' ), 10, 3 );
+
+			// This filter allows you to override the product quantity.
+			//add_filter( 'cocart_add_to_cart_quantity', array( $this, 'override_product_quantity' ), 10, 5 );
+
+
+			// Override the cookie name.
+			//add_filter( 'cocart_cookie', function() { return 'cocart_demo'; });
+
+			// Enables all cross origin header requests.
+			//add_filter( 'cocart_disable_all_cors', function() { return false; });
 
 			// Load translation files.
 			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -91,11 +111,10 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * @access public
 		 */
 		public function send_customer_email_empty() {
-			// TODO: `is_user_logged_in()` will return false via the REST API so you will have to authenticate the user another way.
-			if ( is_user_logged_in() ) {
-				$user_id  = get_current_user_id();
-				$userdata = get_userdata( $user_id );
+			$user_id  = get_current_user_id();
 
+			if ( $user_id > 0 ) {
+				$userdata = get_userdata( $user_id );
 				$send_to = $userdata->email;
 				$subject = __( 'What happened?', 'co-cart-tweaks' );
 				$message = __( 'Why did you empty your cart? Anything we can do to help?', 'co-cart-tweaks' );
@@ -114,9 +133,9 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 		 * @access public
 		 */
 		public function limited_item( $current_data ) {
-			// TODO: `is_user_logged_in()` will return false via the REST API so you will have to authenticate the user another way.
-			if ( is_user_logged_in() ) {
-				$user_id  = get_current_user_id();
+			$user_id  = get_current_user_id();
+
+			if ( $user_id > 0 ) {
 				$userdata = get_userdata( $user_id );
 
 				$product_data = wc_get_product( $current_data['variation_id'] ? $current_data['variation_id'] : $current_data['product_id'] );
@@ -264,7 +283,7 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 					$color  = '#a00';
 					break;
 				case 'onbackorder':
-					$status = __( 'Available on backorder', 'co-cart-tweaks' );
+					$status = __( 'Available on backorders', 'co-cart-tweaks' );
 					break;
 			}
 
@@ -290,6 +309,8 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			$cart_contents = isset( WC()->cart ) ? WC()->cart->get_cart() : WC()->session->cart;
 
 			$required_product_id = '123'; // Replace with real product ID number.
+
+			$status = true;
 
 			foreach ( $cart_contents as $item_key => $cart_item ) { 
 				// If required product ID does not exist return false.
@@ -370,6 +391,58 @@ if ( ! class_exists( 'CoCart_Tweaks' ) ) {
 			return __( 'Whoa there! I think you forgot to add items to the cart first. Go back to the shop and add something first', 'co-cart-tweaks' );
 		}
 
+		/**
+		 * Filters the product name.
+		 *
+		 * @access public
+		 * @param  object $_product
+		 * @param  array  $cart_item
+		 * @param  string $item_key
+		 * @return string
+		 */
+		public function override_product_name( $_product, $cart_item, $item_key ) {
+			return __( 'This is just a DEMO!', 'cocart-tweaks' );
+		} // END override_product_name()
+
+		/**
+		 * Filters the quantity for specified products.
+		 *
+		 * @requires    2.1.0
+		 * @access public
+		 * @param  int   $quantity       - The original quantity of the item.
+		 * @param  int   $product_id     - The product ID.
+		 * @param  int   $variation_id   - The variation ID.
+		 * @param  array $variation      - The variation data.
+		 * @param  array $cart_item_data - The cart item data.
+		 * @return int  $quantity       - The new quantity of the item.
+		 */
+		public function override_product_quantity( $quantity, $product_id, $variation_id, $variation, $cart_item_data ) {
+			// Make sure you specify the product ID you want to override.
+			if ( $product_id == 32 ) {
+				return 3; // Make sure that you just return the number and not override the `$quantity` variable.
+			}
+
+			// Return `$quantity` variable for all other products that you are NOT overriding.
+			return $quantity;
+		} // END override_product_quantity()
+
+
+		/**
+		 * Disable debug logging for specific events.
+		 *
+		 * @access public
+		 * @param  bool   $status - Logs enabled
+		 * @param  string $type   - Type of event.
+		 * @param  string $plugin - Plugin slug
+		 * @return bool
+		 */
+		public function disable_logs( $status, $type, $plugin ) {
+			if ( in_array( $type, array( 'info', 'notice' ) ) ) {
+				return false;
+			}
+
+			return $status;
+		} //END disable_logs()
 
 		/**
 		 * Make the plugin translation ready.
